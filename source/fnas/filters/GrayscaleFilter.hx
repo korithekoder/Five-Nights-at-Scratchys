@@ -1,4 +1,4 @@
-package funkin.graphics.shaders;
+package fnas.filters;
 
 import flixel.addons.display.FlxRuntimeShader;
 import fnas.backend.util.PathUtil;

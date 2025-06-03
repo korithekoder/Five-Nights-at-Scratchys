@@ -14,7 +14,8 @@ using StringTools;
  * and improves management of feature flag logic.
  */
 @:nullSafety
-class Project extends HXProject {
+class Project extends HXProject
+{
 	//
 	// METADATA
 	//
@@ -113,7 +114,8 @@ class Project extends HXProject {
 	 */
 	static final LOGGING_ALLOWED:FeatureFlag = 'LOGGING_ALLOWED';
 
-	public function new() {
+	public function new()
+	{
 		super();
 
 		flair();
@@ -131,7 +133,8 @@ class Project extends HXProject {
 	/**
 	 * Display some fancy info before initializing.
 	 */
-	function flair() {
+	function flair()
+	{
 		info('Five Nights at Scratchy\'s');
 		info('Setting up build...');
 
@@ -146,7 +149,8 @@ class Project extends HXProject {
 	 * Apply basic project metadata, such as the game title and version number,
 	 * as well as info like the package name and company (used by various app stores).
 	 */
-	function configureApp() {
+	function configureApp()
+	{
 		this.meta.title = TITLE;
 		this.meta.version = VERSION;
 		this.meta.packageName = PACKAGE_NAME;
@@ -192,18 +196,21 @@ class Project extends HXProject {
 		// force / allow high DPI
 		this.window.allowHighDPI = true;
 
-		if (isWeb()) {
+		if (isWeb())
+		{
 			this.window.resizable = true;
 		}
 
-		if (isDesktop()) {
+		if (isDesktop())
+		{
 			this.window.orientation = Orientation.LANDSCAPE;
 			this.window.fullscreen = false;
 			this.window.resizable = true;
 			this.window.vsync = false;
 		}
 
-		if (isMobile()) {
+		if (isMobile())
+		{
 			this.window.orientation = Orientation.LANDSCAPE;
 			this.window.fullscreen = false;
 			this.window.resizable = false;
@@ -215,9 +222,11 @@ class Project extends HXProject {
 	/**
 	 * Log information about the configured target platform.
 	 */
-	function displayTarget() {
+	function displayTarget()
+	{
 		// Display the target operating system.
-		switch (this.target) {
+		switch (this.target)
+		{
 			case Platform.WINDOWS:
 				info('Target Platform: Windows');
 			case Platform.MAC:
@@ -249,7 +258,8 @@ class Project extends HXProject {
 				error('Unsupported platform (got ${target})');
 		}
 
-		switch (this.platformType) {
+		switch (this.platformType)
+		{
 			case PlatformType.DESKTOP:
 				info('Platform Type: Desktop');
 			case PlatformType.MOBILE:
@@ -263,25 +273,40 @@ class Project extends HXProject {
 		}
 
 		// Print whether we are using HXCPP, HashLink, or something else.
-		if (isWeb()) {
+		if (isWeb())
+		{
 			info('Target Language: JavaScript (HTML5)');
-		} else if (isHashLink()) {
+		}
+		else if (isHashLink())
+		{
 			info('Target Language: HashLink');
-		} else if (isNeko()) {
+		}
+		else if (isNeko())
+		{
 			info('Target Language: Neko');
-		} else if (isJava()) {
+		}
+		else if (isJava())
+		{
 			info('Target Language: Java');
-		} else if (isNodeJS()) {
+		}
+		else if (isNodeJS())
+		{
 			info('Target Language: JavaScript (NodeJS)');
-		} else if (isCSharp()) {
+		}
+		else if (isCSharp())
+		{
 			info('Target Language: C#');
-		} else {
+		}
+		else
+		{
 			info('Target Language: C++');
 		}
 
-		for (arch in this.architectures) {
+		for (arch in this.architectures)
+		{
 			// Display the list of target architectures.
-			switch (arch) {
+			switch (arch)
+			{
 				case Architecture.X86:
 					info('Architecture: x86');
 				case Architecture.X64:
@@ -301,9 +326,12 @@ class Project extends HXProject {
 				case Architecture.MIPSEL:
 					info('Architecture: MIPSEL');
 				case null:
-					if (!isWeb()) {
+					if (!isWeb())
+					{
 						error('Unsupported architecture (got null on non-web platform)');
-					} else {
+					}
+					else
+					{
 						info('Architecture: Web');
 					}
 				default:
@@ -315,7 +343,8 @@ class Project extends HXProject {
 	/**
 	 * Apply various feature flags based on the target platform and the user-provided build flags.
 	 */
-	function configureFeatureFlags() {
+	function configureFeatureFlags()
+	{
 		// Enable Discord rich presence
 		// (works only for Windows)
 		DISCORD_ALLOWED.apply(this, isWindows());
@@ -331,7 +360,8 @@ class Project extends HXProject {
 	/**
 	 * Set compilation flags which are not feature flags.
 	 */
-	function configureCompileDefines() {
+	function configureCompileDefines()
+	{
 		// Enable OpenFL's error handler. Required for the crash logger.
 		setHaxedef('openfl-enable-handle-error');
 
@@ -350,7 +380,8 @@ class Project extends HXProject {
 		// messes with the filters sometimes
 		setHaxedef('FLX_NO_DEBUG');
 
-		if (isRelease()) {
+		if (isRelease())
+		{
 			// Improve performance on Nape
 			setHaxedef('NAPE_RELEASE_BUILD');
 		}
@@ -359,7 +390,8 @@ class Project extends HXProject {
 		setHaxedef('message.reporting', 'pretty');
 	}
 
-	function configureOutputDir() {
+	function configureOutputDir()
+	{
 		// Set the output directory. Depends on the target platform and build type.
 		var buildDir = 'export/${isDebug() ? 'debug' : isRelease() ? 'release' : 'test'}';
 		buildDir += '/';
@@ -367,7 +399,8 @@ class Project extends HXProject {
 		app.path = buildDir;
 	}
 
-	function configureHaxelibs() {
+	function configureHaxelibs()
+	{
 		//
 		// FLIXEL
 		//
@@ -381,7 +414,8 @@ class Project extends HXProject {
 		// Additional utilities for Flixel
 		addHaxelib('flixel-addons');
 		// VSCode debug support
-		if (isDebug()) {
+		if (isDebug())
+		{
 			addHaxelib('hxcpp-debug-server');
 		}
 
@@ -392,26 +426,32 @@ class Project extends HXProject {
 		// Manipulating sound effects programmatically
 		addHaxelib('flxsoundfilters');
 		// Discord rich presence
-		if (DISCORD_ALLOWED.isEnabled(this)) {
+		if (DISCORD_ALLOWED.isEnabled(this))
+		{
 			addHaxelib('hxdiscord_rpc');
 		}
 	}
 
-	function configureAssets() {
+	function configureAssets()
+	{
 		// Add font assets
 		addAssetPath('assets/fonts', 'assets/fonts', 'default', ['*.ttf'], []);
 
 		// Add shared image assets
 		addAssetPath('assets/images', 'assets/images', 'default', ['*.png'], []);
 
-		// Add music and sound assets for web (.mp3)
-		if (isWeb()) {
+		// Add ambience, music and sound assets for web (.mp3)
+		if (isWeb())
+		{
+			addAssetPath('assets/ambience', 'assets/ambience', 'default', ['*.mp3'], ['*.ogg']);
 			addAssetPath('assets/music', 'assets/music', 'default', ['*.mp3'], ['*.ogg']);
 			addAssetPath('assets/sounds', 'assets/sounds', 'default', ['*.mp3'], ['*.ogg']);
 		}
 
-		// Add music and sound assets for desktop (.ogg)
-		if (isDesktop()) {
+		// Add ambience, music and sound assets for desktop (.ogg)
+		if (isDesktop())
+		{
+			addAssetPath('assets/ambience', 'assets/ambience', 'default', ['*.ogg'], ['*.mp3']);
 			addAssetPath('assets/music', 'assets/music', 'default', ['*.ogg'], ['*.mp3']);
 			addAssetPath('assets/sounds', 'assets/sounds', 'default', ['*.ogg'], ['*.mp3']);
 		}
@@ -427,102 +467,126 @@ class Project extends HXProject {
 	// Easy functions to make the code more readable.
 	//
 
-	public function isWeb():Bool {
+	public function isWeb():Bool
+	{
 		return this.platformType == PlatformType.WEB;
 	}
 
-	public function isMobile():Bool {
+	public function isMobile():Bool
+	{
 		return this.platformType == PlatformType.MOBILE;
 	}
 
-	public function isDesktop():Bool {
+	public function isDesktop():Bool
+	{
 		return this.platformType == PlatformType.DESKTOP;
 	}
 
-	public function isConsole():Bool {
+	public function isConsole():Bool
+	{
 		return this.platformType == PlatformType.CONSOLE;
 	}
 
-	public function is32Bit():Bool {
+	public function is32Bit():Bool
+	{
 		return this.architectures.contains(Architecture.X86);
 	}
 
-	public function is64Bit():Bool {
+	public function is64Bit():Bool
+	{
 		return this.architectures.contains(Architecture.X64);
 	}
 
-	public function isWindows():Bool {
+	public function isWindows():Bool
+	{
 		return this.target == Platform.WINDOWS;
 	}
 
-	public function isMac():Bool {
+	public function isMac():Bool
+	{
 		return this.target == Platform.MAC;
 	}
 
-	public function isLinux():Bool {
+	public function isLinux():Bool
+	{
 		return this.target == Platform.LINUX;
 	}
 
-	public function isAndroid():Bool {
+	public function isAndroid():Bool
+	{
 		return this.target == Platform.ANDROID;
 	}
 
-	public function isIOS():Bool {
+	public function isIOS():Bool
+	{
 		return this.target == Platform.IOS;
 	}
 
-	public function isHashLink():Bool {
+	public function isHashLink():Bool
+	{
 		return this.targetFlags.exists('hl');
 	}
 
-	public function isNeko():Bool {
+	public function isNeko():Bool
+	{
 		return this.targetFlags.exists('neko');
 	}
 
-	public function isJava():Bool {
+	public function isJava():Bool
+	{
 		return this.targetFlags.exists('java');
 	}
 
-	public function isNodeJS():Bool {
+	public function isNodeJS():Bool
+	{
 		return this.targetFlags.exists('nodejs');
 	}
 
-	public function isCSharp():Bool {
+	public function isCSharp():Bool
+	{
 		return this.targetFlags.exists('cs');
 	}
 
-	public function isDisplay():Bool {
+	public function isDisplay():Bool
+	{
 		return this.command == 'display';
 	}
 
-	public function isDebug():Bool {
+	public function isDebug():Bool
+	{
 		return this.debug;
 	}
 
-	public function isRelease():Bool {
+	public function isRelease():Bool
+	{
 		return this.defines.exists("final");
 	}
 
-	public function getHaxedef(name:String):Null<Dynamic> {
+	public function getHaxedef(name:String):Null<Dynamic>
+	{
 		return this.haxedefs.get(name);
 	}
 
-	public function setHaxedef(name:String, ?value:String):Void {
+	public function setHaxedef(name:String, ?value:String):Void
+	{
 		if (value == null)
 			value = '';
 
 		this.haxedefs.set(name, value);
 	}
 
-	public function unsetHaxedef(name:String):Void {
+	public function unsetHaxedef(name:String):Void
+	{
 		this.haxedefs.remove(name);
 	}
 
-	public function getDefine(name:String):Null<Dynamic> {
+	public function getDefine(name:String):Null<Dynamic>
+	{
 		return this.defines.get(name);
 	}
 
-	public function hasDefine(name:String):Bool {
+	public function hasDefine(name:String):Bool
+	{
 		return this.defines.exists(name);
 	}
 
@@ -532,21 +596,24 @@ class Project extends HXProject {
 	 * @param name The name of the library to add.
 	 * @param version The version of the library to add. Optional.
 	 */
-	public function addHaxelib(name:String, version:String = ''):Void {
+	public function addHaxelib(name:String, version:String = ''):Void
+	{
 		this.haxelibs.push(new Haxelib(name, version));
 	}
 
 	/**
 	 * Add a `haxeflag` to the project.
 	 */
-	public function addHaxeFlag(value:String):Void {
+	public function addHaxeFlag(value:String):Void
+	{
 		this.haxeflags.push(value);
 	}
 
 	/**
 	 * Call a Haxe build macro.
 	 */
-	public function addHaxeMacro(value:String):Void {
+	public function addHaxeMacro(value:String):Void
+	{
 		addHaxeFlag('--macro ${value}');
 	}
 
@@ -556,7 +623,8 @@ class Project extends HXProject {
 	 * @param icon The path to the icon.
 	 * @param size The size of the icon. Optional.
 	 */
-	public function addIcon(icon:String, ?size:Int):Void {
+	public function addIcon(icon:String, ?size:Int):Void
+	{
 		this.icons.push(new Icon(icon, size));
 	}
 
@@ -568,7 +636,8 @@ class Project extends HXProject {
 	 * @param library The asset library to add the asset to. `null` = 'default'
 	 * @param embed Whether to embed the asset in the executable.
 	 */
-	public function addAsset(path:String, ?rename:String, ?library:String, embed:Bool = false):Void {
+	public function addAsset(path:String, ?rename:String, ?library:String, embed:Bool = false):Void
+	{
 		// path, rename, type, embed, setDefaults
 		var asset = new Asset(path, rename, null, embed, true);
 		@:nullSafety(Off)
@@ -588,7 +657,8 @@ class Project extends HXProject {
 	 * @param exclude An optional array to exclude specific asset names.
 	 * @param embed Whether to embed the assets in the executable.
 	 */
-	public function addAssetPath(path:String, ?rename:String, library:String, ?include:Array<String>, ?exclude:Array<String>, embed:Bool = false):Void {
+	public function addAssetPath(path:String, ?rename:String, library:String, ?include:Array<String>, ?exclude:Array<String>, embed:Bool = false):Void
+	{
 		// Argument parsing.
 		if (path == '')
 			return;
@@ -604,22 +674,33 @@ class Project extends HXProject {
 			targetPath += '/';
 
 		// Validate path.
-		if (!sys.FileSystem.exists(path)) {
+		if (!sys.FileSystem.exists(path))
+		{
 			error('Could not find asset path "${path}".');
-		} else if (!sys.FileSystem.isDirectory(path)) {
+		}
+		else if (!sys.FileSystem.isDirectory(path))
+		{
 			error('Could not parse asset path "${path}", expected a directory.');
-		} else {
+		}
+		else
+		{
 			// info('  Found asset path '${path}'.');
 		}
 
-		for (file in sys.FileSystem.readDirectory(path)) {
-			if (sys.FileSystem.isDirectory('${path}/${file}')) {
+		for (file in sys.FileSystem.readDirectory(path))
+		{
+			if (sys.FileSystem.isDirectory('${path}/${file}'))
+			{
 				// Attempt to recursively add all assets in the directory.
-				if (this.filter(file, ['*'], exclude)) {
+				if (this.filter(file, ['*'], exclude))
+				{
 					addAssetPath('${path}/${file}', '${targetPath}${file}', library, include, exclude, embed);
 				}
-			} else {
-				if (this.filter(file, include, exclude)) {
+			}
+			else
+			{
+				if (this.filter(file, include, exclude))
+				{
 					addAsset('${path}/${file}', '${targetPath}${file}', library, embed);
 				}
 			}
@@ -633,7 +714,8 @@ class Project extends HXProject {
 	 * @param embed
 	 * @param preload
 	 */
-	public function addAssetLibrary(name:String, embed:Bool = false, preload:Bool = false):Void {
+	public function addAssetLibrary(name:String, embed:Bool = false, preload:Bool = false):Void
+	{
 		// sourcePath, name, type, embed, preload, generate, prefix
 		var sourcePath = '';
 		this.libraries.push(new Library(sourcePath, name, null, embed, preload, false, ''));
@@ -646,21 +728,25 @@ class Project extends HXProject {
 	/**
 	 * A CLI command to run a command in the shell.
 	 */
-	public function buildCLICommand(cmd:String):CLICommand {
+	public function buildCLICommand(cmd:String):CLICommand
+	{
 		return CommandHelper.fromSingleString(cmd);
 	}
 
 	/**
 	 * A CLI command to run a Haxe script via `--interp`.
 	 */
-	public function buildHaxeCLICommand(path:String):CLICommand {
+	public function buildHaxeCLICommand(path:String):CLICommand
+	{
 		return CommandHelper.interpretHaxe(path);
 	}
 
-	public function getGitCommit():String {
+	public function getGitCommit():String
+	{
 		// Cannibalized from GitCommit.hx
 		var process = new sys.io.Process('git', ['rev-parse', 'HEAD']);
-		if (process.exitCode() != 0) {
+		if (process.exitCode() != 0)
+		{
 			var message = process.stderr.readAll().toString();
 			error('[ERROR] Could not determine current git commit; is this a proper Git repository?');
 		}
@@ -673,11 +759,13 @@ class Project extends HXProject {
 		return commitHashSplice;
 	}
 
-	public function getGitBranch():String {
+	public function getGitBranch():String
+	{
 		// Cannibalized from GitCommit.hx
 		var branchProcess = new sys.io.Process('git', ['rev-parse', '--abbrev-ref', 'HEAD']);
 
-		if (branchProcess.exitCode() != 0) {
+		if (branchProcess.exitCode() != 0)
+		{
 			var message = branchProcess.stderr.readAll().toString();
 			error('Could not determine current git branch; is this a proper Git repository?');
 		}
@@ -689,22 +777,30 @@ class Project extends HXProject {
 		return branchName;
 	}
 
-	public function getGitModified():Bool {
+	public function getGitModified():Bool
+	{
 		var branchProcess = new sys.io.Process('git', ['status', '--porcelain']);
 
-		if (branchProcess.exitCode() != 0) {
+		if (branchProcess.exitCode() != 0)
+		{
 			var message = branchProcess.stderr.readAll().toString();
 			error('Could not determine current git status; is this a proper Git repository?');
 		}
 
 		var output:String = '';
-		try {
+		try
+		{
 			output = branchProcess.stdout.readLine();
-		} catch (e) {
-			if (e.message == 'Eof') {
+		}
+		catch (e)
+		{
+			if (e.message == 'Eof')
+			{
 				// Do nothing.
 				// Eof = No output.
-			} else {
+			}
+			else
+			{
 				// Rethrow other exceptions.
 				throw e;
 			}
@@ -722,15 +818,18 @@ class Project extends HXProject {
 	/**
 	 * Display an error message. This should stop the build process.
 	 */
-	public function error(message:String):Void {
+	public function error(message:String):Void
+	{
 		Log.error('${message}');
 	}
 
 	/**
 	 * Display an info message. This should not interfere with the build process.
 	 */
-	public function info(message:String):Void {
-		if (command != 'display') {
+	public function info(message:String):Void
+	{
+		if (command != 'display')
+		{
 			Log.info('[INFO] ${message}');
 		}
 	}
@@ -740,15 +839,18 @@ class Project extends HXProject {
  * An object representing a feature flag, which can be enabled or disabled.
  * Includes features such as automatic generation of compile defines and inversion.
  */
-abstract FeatureFlag(String) {
+abstract FeatureFlag(String)
+{
 	static final INVERSE_PREFIX:String = 'NO_';
 
-	public function new(input:String) {
+	public function new(input:String)
+	{
 		this = input;
 	}
 
 	@:from
-	public static function fromString(input:String):FeatureFlag {
+	public static function fromString(input:String):FeatureFlag
+	{
 		return new FeatureFlag(input);
 	}
 
@@ -757,23 +859,32 @@ abstract FeatureFlag(String) {
 	 * Doesn't override a feature flag that was set explicitly.
 	 * @param enableByDefault Whether to enable this feature flag if it is unset.
 	 */
-	public function apply(project:Project, enableByDefault:Bool = false):Void {
+	public function apply(project:Project, enableByDefault:Bool = false):Void
+	{
 		// TODO: Name this function better?
 
-		if (isEnabled(project)) {
+		if (isEnabled(project))
+		{
 			// If this flag was already enabled, disable the inverse.
 			project.info('Enabling feature flag ${this}');
 			getInverse().disable(project, false);
-		} else if (getInverse().isEnabled(project)) {
+		}
+		else if (getInverse().isEnabled(project))
+		{
 			// If the inverse flag was already enabled, disable this flag.
 			project.info('Disabling feature flag ${this}');
 			disable(project, false);
-		} else {
-			if (enableByDefault) {
+		}
+		else
+		{
+			if (enableByDefault)
+			{
 				// Enable this flag if it was unset, and disable the inverse.
 				project.info('Enabling feature flag ${this}');
 				enable(project, true);
-			} else {
+			}
+			else
+			{
 				// Disable this flag if it was unset, and enable the inverse.
 				project.info('Disabling feature flag ${this}');
 				disable(project, true);
@@ -787,9 +898,11 @@ abstract FeatureFlag(String) {
 	 * @param project The project to modify.
 	 * @param andInverse Also disable the feature flag's inverse.
 	 */
-	public function enable(project:Project, andInverse:Bool = true) {
+	public function enable(project:Project, andInverse:Bool = true)
+	{
 		project.setHaxedef(this, '');
-		if (andInverse) {
+		if (andInverse)
+		{
 			getInverse().disable(project, false);
 		}
 	}
@@ -800,9 +913,11 @@ abstract FeatureFlag(String) {
 	 * @param project The project to modify.
 	 * @param andInverse Also enable the feature flag's inverse.
 	 */
-	public function disable(project:Project, andInverse:Bool = true) {
+	public function disable(project:Project, andInverse:Bool = true)
+	{
 		project.unsetHaxedef(this);
-		if (andInverse) {
+		if (andInverse)
+		{
 			getInverse().enable(project, false);
 		}
 	}
@@ -811,7 +926,8 @@ abstract FeatureFlag(String) {
 	 * Query if this feature flag is enabled.
 	 * @param project The project to query.
 	 */
-	public function isEnabled(project:Project):Bool {
+	public function isEnabled(project:Project):Bool
+	{
 		// Check both Haxedefs and Defines for this flag.
 		return project.haxedefs.exists(this) || project.defines.exists(this);
 	}
@@ -819,7 +935,8 @@ abstract FeatureFlag(String) {
 	/**
 	 * Query if this feature flag's inverse is enabled.
 	 */
-	public function isDisabled(project:Project):Bool {
+	public function isDisabled(project:Project):Bool
+	{
 		return getInverse().isEnabled(project);
 	}
 
@@ -827,8 +944,10 @@ abstract FeatureFlag(String) {
 	 * Return the inverse of this feature flag.
 	 * @return A new feature flag that is the inverse of this one.
 	 */
-	public function getInverse():FeatureFlag {
-		if (this.startsWith(INVERSE_PREFIX)) {
+	public function getInverse():FeatureFlag
+	{
+		if (this.startsWith(INVERSE_PREFIX))
+		{
 			return this.substring(INVERSE_PREFIX.length);
 		}
 		return INVERSE_PREFIX + this;

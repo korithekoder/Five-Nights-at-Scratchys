@@ -1,6 +1,7 @@
 package fnas.backend.util;
 
 #if LOGGING_ALLOWED
+import haxe.Exception;
 import sys.FileSystem;
 import sys.io.File;
 import sys.io.FileOutput;
@@ -68,8 +69,14 @@ final class LoggerUtil
 	public static function shutdown():Void
 	{
 		#if LOGGING_ALLOWED
-		file.flush(); // Write all info to the file
-		file.close(); // Close access to the file
+		try
+		{
+			file.close(); // Close access to the file
+		}
+		catch (e:Exception)
+		{
+			// Failed to close access to the file :(
+		}
 		#end
 	}
 
@@ -95,14 +102,21 @@ final class LoggerUtil
 		#if LOGGING_ALLOWED
 		// Get the current timestamp as a string
 		var timestamp:String = Date.now().toString();
-		// Format the log message with log type and timestamp
-		var newLog:String = '[STARCORE][$logType][$timestamp]: $logMsg';
-		// Write the formatted log message to the file, followed by a newline
-		file.writeString('$newLog\n');
-		// Flush the file buffer to ensure the log is written immediately
-		file.flush();
-		// Output the log message to the console for debugging
-		trace(newLog);
+		try
+		{
+			// Format the log message with log type and timestamp
+			var newLog:String = '[$logType][$timestamp]: $logMsg';
+			// Write the formatted log message to the file, followed by a newline
+			file.writeString('$newLog\n');
+			// Flush the file buffer to ensure the log is written immediately
+			file.flush();
+			// Output the log message to the console for debugging
+			trace(newLog);
+		}
+		catch (e:Exception)
+		{
+			trace('[$ERROR][$timestamp]: Failed to write new log info to file!');
+		}
 		#end
 	}
 }

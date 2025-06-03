@@ -1,4 +1,4 @@
-package funkin.graphics.shaders;
+package fnas.filters;
 
 import flixel.util.FlxColor;
 import openfl.display.BitmapData;

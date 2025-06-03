@@ -21,12 +21,12 @@ final class PathUtil
 	}
 
 	/**
-	 * Get the path of an image asset .
+	 * Get the path of an image asset.
 	 * 
 	 * @param name The name of the image (this does not include the file extension).
 	 * @return     The path of the image.
 	 */
-	public static inline function ofSharedImage(name:String):String
+	public static inline function ofImage(name:String):String
 	{
 		return 'assets/images/$name.png';
 	}
@@ -37,7 +37,7 @@ final class PathUtil
 	 * @param name The name of the JSON file (this does not include the file extension).
 	 * @return     The path of the JSON file.
 	 */
-	public static inline function ofSharedJson(name:String):String
+	public static inline function ofJson(name:String):String
 	{
 		return 'assets/data/$name.json';
 	}
@@ -48,7 +48,7 @@ final class PathUtil
 	 * @param name The name of the sound effect (this does not include the file extension).
 	 * @return     The path of the sound effect.
 	 */
-	public static inline function ofSharedSound(name:String):String
+	public static inline function ofSound(name:String):String
 	{
 		return 'assets/sounds/$name${#if html5 '.mp3' #else '.ogg' #end}';
 	}
@@ -59,7 +59,7 @@ final class PathUtil
 	 * @param name The name of the soundtrack (this does not include the file extension).
 	 * @return     The path of the soundtrack.
 	 */
-	public static inline function ofSharedMusic(name:String):String
+	public static inline function ofMusic(name:String):String
 	{
 		return 'assets/music/$name${#if html5 '.mp3' #else '.ogg' #end}';
 	}
@@ -79,17 +79,6 @@ final class PathUtil
 	public static inline function ofSpritesheet(name:String):Array<String>
 	{
 		return ['assets/images/spritesheets/$name.png', 'assets/images/spritesheets/$name.xml'];
-	}
-
-	/**
-	 * Get the spritesheet of a specific type of tile.
-	 * 
-	 * @param type The type of tile (e.g. `grass`, `dirt`, `rocky-dirt`, etc.).
-	 * @return     The path of the tile.
-	 */
-	public static inline function ofTileSpritesheetTexture(type:String):String
-	{
-		return 'assets/tiles/textures/$type.png';
 	}
 
 	/**

@@ -37,7 +37,7 @@ final class FlixelUtil
 	{
 		if (playTransitionSfx)
 		{
-			FlxG.sound.play(PathUtil.ofSharedSound(''), 1, false, false);
+			FlxG.sound.play(PathUtil.ofSound(''), 1, false, false);
 		}
 
 		FlxG.camera.fade(FlxColor.BLACK, duration, false, () ->
@@ -74,7 +74,7 @@ final class FlixelUtil
 			sound.play();
 			CacheUtil.currentReverbSoundsAmount++;
 			// Recycle the sound after it finishes playing
-			new FlxTimer().start((sound.length / 1000) + (decayTime / 1.85), (_) ->
+			new FlxTimer().start((sound.length / 1000) + (decayTime / 1.5), (_) ->
 			{
 				sound.filter.clearEffects();
 				sound.filter = null;
@@ -95,7 +95,7 @@ final class FlixelUtil
 	{
 		if (CacheUtil.canPlayMenuMusic)
 		{
-			FlxG.sound.playMusic(PathUtil.ofSharedMusic(Constants.MENU_MUSIC_NAME), volume, true);
+			FlxG.sound.playMusic(PathUtil.ofMusic(Constants.MENU_MUSIC_NAME), volume, true);
 			CacheUtil.canPlayMenuMusic = false;
 		}
 	}
@@ -130,7 +130,7 @@ final class FlixelUtil
 	public static function closeGame(sysShutdown:Bool = true):Void
 	{
 		// Log info
-		LoggerUtil.log('SHUTTING DOWN STARCORE', INFO, false);
+		LoggerUtil.log('SHUTTING DOWN FNAS', INFO, false);
 		// Save all of the user's data
 		SaveUtil.saveAll();
 		// Shutdown Discord rich presence

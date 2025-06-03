@@ -1,4 +1,4 @@
-package starcore.filters;
+package fnas.filters;
 
 import flixel.system.FlxAssets.FlxShader;
 

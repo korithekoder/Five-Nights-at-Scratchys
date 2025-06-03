@@ -14,10 +14,10 @@ final class CacheUtil
 	public static var lastVolumeUsed:Float;
 
 	/**
-	 * Did the user already see the intro?
+	 * Did the user already see the warnings?
 	 * (This is for loading from and to the main menu when the game hasn't closed yet.)
 	 */
-	public static var alreadySawIntro:Bool = false;
+	public static var alreadySawWarning:Bool = false;
 
 	/**
 	 * Is the game's window focused?

@@ -1,5 +1,9 @@
 package;
 
+import openfl.events.KeyboardEvent;
+import fnas.states.menus.MainMenuState;
+import flixel.tweens.FlxTween;
+import flixel.math.FlxMath;
 import fnas.backend.util.FlixelUtil;
 import fnas.backend.util.LoggerUtil;
 import openfl.display.StageQuality;
@@ -7,7 +11,6 @@ import fnas.backend.util.CacheUtil;
 import fnas.backend.data.ClientPrefs;
 import fnas.backend.util.PathUtil;
 import flixel.system.FlxAssets;
-// import fnas.states.menus.MainMenuState;
 import openfl.filters.ShaderFilter;
 import flixel.FlxG;
 import flixel.FlxState;
@@ -25,9 +28,10 @@ import js.Browser;
  * The initial state of the game. This is where
  * you can load assets and set up the game.
  */
-class InitState extends FlxState {
-
-	override public function create():Void {
+class InitState extends FlxState
+{
+	override public function create():Void
+	{
 		// Setup the logger for fnas
 		LoggerUtil.initialize();
 
@@ -48,19 +52,17 @@ class InitState extends FlxState {
 		// cause null errors and crash the game!
 		ClientPrefs.loadAll();
 
-		// Register all of the entities that are in the game
-		registerEntities();
-
 		// Start up Discord rich presence
 		#if DISCORD_ALLOWED
 		DiscordClient.initialize();
 		#end
 
 		// Switch to the main menu state after everything has loaded
-		// FlxG.switchState(() -> new MainMenuState());
+		FlxG.switchState(() -> new MainMenuState());
 	}
 
-	function configureFlixelSettings():Void {
+	function configureFlixelSettings():Void
+	{
 		// Log info
 		LoggerUtil.log('Configuring Flixel settings');
 
@@ -81,14 +83,15 @@ class InitState extends FlxState {
 		FlxG.sound.muteKeys = [];
 
 		// Set the default font
-		FlxAssets.FONT_DEFAULT = PathUtil.ofFont('Born2bSportyFS');
+		FlxAssets.FONT_DEFAULT = PathUtil.ofFont('vcr');
 
 		// Set the stage quality
 		FlxG.stage.quality = StageQuality.MEDIUM;
 
 		// Disable the right-click context menu for HTML5
 		#if html5
-		Browser.document.addEventListener("contextmenu", (e) -> {
+		Browser.document.addEventListener("contextmenu", (e) ->
+		{
 			e.preventDefault();
 		});
 		#end
@@ -104,13 +107,15 @@ class InitState extends FlxState {
 		#end
 	}
 
-	function addBackgroundProcesses():Void {
+	function addBackgroundProcesses():Void
+	{
 		// Log info
 		LoggerUtil.log('Adding background processes');
 		// Update the filters that need to
 		// constantly be reset
 		#if FILTERS_ALLOWED
-		FlxG.signals.postUpdate.add(() -> {
+		FlxG.signals.postUpdate.add(() ->
+		{
 			CacheUtil.angelFilter.update(FlxG.elapsed);
 			CacheUtil.vcrMario85Filter.update(FlxG.elapsed);
 			CacheUtil.ycbuEndingFilter.update(0, FlxG.elapsed);
@@ -118,43 +123,61 @@ class InitState extends FlxState {
 		#end
 	}
 
-	function addEventListeners():Void {
+	function addEventListeners():Void
+	{
 		// Log info
 		LoggerUtil.log('Adding event listeners');
 
 		#if desktop
 		// Minimize volume when the window is out of focus
-		Application.current.window.onFocusIn.add(() -> {
+		Application.current.window.onFocusIn.add(() ->
+		{
 			// Bring the volume back up when the window is focused again
 			var minimizeVolume:Bool = ClientPrefs.getOption('minimizeVolume');
-			if (minimizeVolume && !CacheUtil.isWindowFocused) {
+			if (minimizeVolume && !CacheUtil.isWindowFocused)
+			{
 				// Set back to one decimal place (0.1) when the screen gains focus again
 				// (note that if the user had the volume all the way down, it will be set to zero)
 				FlxG.sound.volume = (!(Math.abs(FlxG.sound.volume) < FlxMath.EPSILON)) ? 0.1 : 0;
 				CacheUtil.isWindowFocused = true;
 				// Set the volume back to the last volume used
-				FlxTween.num(FlxG.sound.volume, CacheUtil.lastVolumeUsed, 0.3, { type: FlxTweenType.ONESHOT }, (v) -> {
+				FlxTween.num(FlxG.sound.volume, CacheUtil.lastVolumeUsed, 0.3, {type: FlxTweenType.ONESHOT}, (v) ->
+				{
 					FlxG.sound.volume = v;
 				});
 			}
 		});
-		Application.current.window.onFocusOut.add(() -> {
+		Application.current.window.onFocusOut.add(() ->
+		{
 			// Minimize the volume when the window loses focus
 			var minimizeVolume:Bool = ClientPrefs.getOption('minimizeVolume');
-			if (minimizeVolume && CacheUtil.isWindowFocused) {
+			if (minimizeVolume && CacheUtil.isWindowFocused)
+			{
 				// Set the last volume used to the current volume
 				CacheUtil.lastVolumeUsed = FlxG.sound.volume;
 				CacheUtil.isWindowFocused = false;
 				// Tween the volume to 0.03
-				FlxTween.num(FlxG.sound.volume, (!(Math.abs(FlxG.sound.volume) < FlxMath.EPSILON)) ? 0.05 : 0, 0.3, { type: FlxTweenType.ONESHOT }, (v) -> {
+				FlxTween.num(FlxG.sound.volume, (!(Math.abs(FlxG.sound.volume) < FlxMath.EPSILON)) ? 0.05 : 0, 0.3, {type: FlxTweenType.ONESHOT}, (v) ->
+				{
 					FlxG.sound.volume = v;
 				});
 			}
 		});
 		#end
 
+		// Close the game when the user presses ESCAPE
+		// (like literally every FNaF remake lol)
+		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, (_) ->
+		{
+			if (FlxG.keys.justPressed.ESCAPE)
+			{
+				FlixelUtil.closeGame();
+			}
+		});
+
 		// Do shit like saving the user's data when the game closes
-		Application.current.window.onClose.add(() -> {
+		Application.current.window.onClose.add(() ->
+		{
 			// Despite it saying "closeGame", it's not actually closing
 			// the game since the parameter "sysShutdown" is false. What's
 			// actually happening is all of the data is still saving and other utilities
@@ -163,9 +186,5 @@ class InitState extends FlxState {
 			// - Kori ;3
 			FlixelUtil.closeGame(false);
 		});
-	}
-
-	function registerEntities():Void {
-		CacheUtil.registeredEntities.push(new ComplexEntity('test'));
 	}
 }
