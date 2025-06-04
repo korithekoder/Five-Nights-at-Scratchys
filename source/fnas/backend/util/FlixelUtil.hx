@@ -87,20 +87,6 @@ final class FlixelUtil
 	}
 
 	/**
-	 * Play menu music ***if*** it hasn't already started.
-	 * 
-	 * @param volume How loud the menu music should be.
-	 */
-	public static function playMenuMusic(volume:Float = 1):Void
-	{
-		if (CacheUtil.canPlayMenuMusic)
-		{
-			FlxG.sound.playMusic(PathUtil.ofMusic(Constants.MENU_MUSIC_NAME), volume, true);
-			CacheUtil.canPlayMenuMusic = false;
-		}
-	}
-
-	/**
 	 * Tweens an `FlxTypedGroup<FlxSprite>`'s members with ease.
 	 * 
 	 * @param group    The group to tween.

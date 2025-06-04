@@ -35,24 +35,29 @@ final class CacheUtil
 	public static var currentReverbSoundsAmount:Int = 0;
 
 	/**
-	 * Angel filter for Starcore.
+	 * Angel filter.
 	 */
-	public static var angelFilter:AngelFilter = new AngelFilter();
+	public static var angelFilter:AngelFilter;
 
 	/**
-	 * VCR border filter for Starcore.
+	 * VCR border filter.
 	 */
-	public static var vcrBorderFilter:VCRBorderFilter = new VCRBorderFilter();
+	public static var vcrBorderFilter:VCRBorderFilter;
 
 	/**
-	 * VCR Mario 85 filter for Starcore.
+	 * VCR Mario 85 filter.
 	 */
-	public static var vcrMario85Filter:VCRMario85Filter = new VCRMario85Filter();
+	public static var vcrMario85Filter:VCRMario85Filter;
 
 	/**
-	 * YCBU ending filter for Starcore.
+	 * YCBU ending filter.
 	 */
-	public static var ycbuEndingFilter:YCBUEndingFilter = new YCBUEndingFilter();
+	public static var ycbuEndingFilter:YCBUEndingFilter;
+
+	/**
+	 * Grayscale filter.
+	 */
+	public static var grayscaleFilter:GrayscaleFilter;
 
 	function new() {}
 }

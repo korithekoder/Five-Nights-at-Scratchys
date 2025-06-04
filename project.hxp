@@ -434,11 +434,17 @@ class Project extends HXProject
 
 	function configureAssets()
 	{
+		// Add the default asset library
+		addAssetLibrary('default', isWeb(), !isWeb());
+
 		// Add font assets
 		addAssetPath('assets/fonts', 'assets/fonts', 'default', ['*.ttf'], []);
 
-		// Add shared image assets
+		// Add image assets
 		addAssetPath('assets/images', 'assets/images', 'default', ['*.png'], []);
+
+		// Add shader frag assets
+		addAssetPath('assets/shaders', 'assets/shaders', 'default', ['*.frag'], []);
 
 		// Add ambience, music and sound assets for web (.mp3)
 		if (isWeb())

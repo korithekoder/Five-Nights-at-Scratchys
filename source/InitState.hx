@@ -1,5 +1,6 @@
 package;
 
+import fnas.backend.util.AssetUtil;
 import openfl.events.KeyboardEvent;
 import fnas.states.menus.MainMenuState;
 import flixel.tweens.FlxTween;
@@ -20,6 +21,9 @@ import fnas.backend.api.DiscordClient;
 import lime.app.Application;
 import openfl.Lib;
 import openfl.display.StageScaleMode;
+#if FILTERS_ALLOWED
+import fnas.filters.*;
+#end
 #if html5
 import js.Browser;
 #end
@@ -37,6 +41,8 @@ class InitState extends FlxState
 
 		// Log that we are setting up fnas
 		LoggerUtil.log('INITIALIZING FNAS SETUP', INFO, false);
+
+		trace(AssetUtil.getJsonData(PathUtil.ofJson('tight-spot')));
 
 		// Assign and configure Flixel settings
 		configureFlixelSettings();
@@ -98,6 +104,13 @@ class InitState extends FlxState
 
 		// Apply cool but creepy filters
 		#if FILTERS_ALLOWED
+		// Assign the filters AFTER all assets have been loaded!
+		CacheUtil.angelFilter = new AngelFilter();
+		CacheUtil.vcrBorderFilter = new VCRBorderFilter();
+		CacheUtil.vcrMario85Filter = new VCRMario85Filter();
+		CacheUtil.ycbuEndingFilter = new YCBUEndingFilter();
+		CacheUtil.grayscaleFilter = new GrayscaleFilter();
+		// Set the main filters
 		FlxG.game.setFilters([
 			new ShaderFilter(CacheUtil.angelFilter),
 			new ShaderFilter(CacheUtil.vcrBorderFilter),

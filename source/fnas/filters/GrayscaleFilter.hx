@@ -1,8 +1,12 @@
 package fnas.filters;
 
+import openfl.utils.Assets;
 import flixel.addons.display.FlxRuntimeShader;
 import fnas.backend.util.PathUtil;
 
+/**
+ * What do you think?
+ */
 class GrayscaleFilter extends FlxRuntimeShader
 {
 	public var amount:Float = 1;
@@ -16,6 +20,6 @@ class GrayscaleFilter extends FlxRuntimeShader
 	public function setAmount(value:Float):Void
 	{
 		amount = value;
-		this.setFloat("_amount", amount);
+		setFloat("_amount", amount);
 	}
 }

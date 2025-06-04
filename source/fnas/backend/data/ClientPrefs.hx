@@ -5,7 +5,6 @@ import fnas.backend.util.LoggerUtil;
 import fnas.backend.util.PathUtil;
 import fnas.backend.util.SaveUtil;
 import flixel.FlxG;
-import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxSave;
 import haxe.Exception;
 
@@ -28,44 +27,12 @@ import haxe.Exception;
 final class ClientPrefs
 {
 	static var options:Map<String, Any> = Constants.DEFAULT_OPTIONS;
-	static var controlsKeyboard:Map<String, FlxKey>;
 
 	function new() {}
 
 	// ==============================
 	//      GETTERS AND SETTERS
 	// ==============================
-
-	/**
-	 * Get and return a client bind by its ID.
-	 * 
-	 * @param bind The bind to get as a `String`.
-	 * @return     The value of the said bind. If it does not exist, then the
-	 *             default value is returned instead.
-	 */
-	public static inline function getBind(bind:String):FlxKey
-	{
-		if (controlsKeyboard.exists(bind))
-		{
-			return controlsKeyboard.get(bind);
-		}
-		else
-		{
-			LoggerUtil.log('Attempted to obtain non-existent bind "$bind".', ERROR, false);
-			FlixelUtil.closeGame(false);
-			throw new Exception('No such bind as "$bind".');
-		}
-	}
-
-	/**
-	 * Get and return all client controls and binds.
-	 * 
-	 * @return A `Map` of all client binds.
-	 */
-	public static inline function getBinds():Map<String, FlxKey>
-	{
-		return controlsKeyboard.copy();
-	}
 
 	/**
 	 * Get and return a client option by its ID.
@@ -121,27 +88,6 @@ final class ClientPrefs
 		}
 	}
 
-	/**
-	 * Set a specific key bind for the user.
-	 * 
-	 * @param bind        The bind to be set.
-	 * @param newKey      The key to set it to.
-	 * @throws Exception  If the bind does not exist.
-	 */
-	public static function setBind(bind:String, newKey:FlxKey):Void
-	{
-		if (controlsKeyboard.exists(bind))
-		{
-			controlsKeyboard.set(bind, newKey);
-		}
-		else
-		{
-			LoggerUtil.log('Attempted to change non-existent bind "$bind".', ERROR, false);
-			FlixelUtil.closeGame(false);
-			throw new Exception('No such bind as "$bind".');
-		}
-	}
-
 	// =============================
 	//            METHODS
 	// =============================
@@ -156,11 +102,9 @@ final class ClientPrefs
 
 		// Create the binds
 		var optionsData:FlxSave = new FlxSave();
-		var controlsData:FlxSave = new FlxSave();
 
 		// Connect to the saves
 		optionsData.bind(Constants.OPTIONS_SAVE_BIND_ID, PathUtil.getSavePath());
-		controlsData.bind(Constants.CONTROLS_SAVE_BIND_ID, PathUtil.getSavePath());
 
 		// Load options
 		if (optionsData.data.options != null)
@@ -186,32 +130,6 @@ final class ClientPrefs
 			}
 		}
 
-		// Load controls
-		if (controlsData.data.keyboard != null)
-			controlsKeyboard = controlsData.data.keyboard;
-		else
-			controlsKeyboard = Constants.DEFAULT_CONTROLS_KEYBOARD;
-
-		// Check if the user has any new controls
-		// (this is for when new controls are added in an update!)
-		for (key in Constants.DEFAULT_CONTROLS_KEYBOARD.keys())
-		{
-			if (!controlsKeyboard.exists(key))
-			{
-				controlsKeyboard.set(key, Constants.DEFAULT_CONTROLS_KEYBOARD.get(key));
-			}
-		}
-
-		// Filter out any binds that are not present in the current
-		// standard set of binds (which is determined by the default binds)
-		for (key in controlsKeyboard.keys())
-		{
-			if (!Constants.DEFAULT_CONTROLS_KEYBOARD.exists(key))
-			{
-				controlsKeyboard.remove(key);
-			}
-		}
-
 		// Set the volume to the last used volume the user had
 		if (optionsData.data.lastVolume != null)
 			FlxG.sound.volume = optionsData.data.lastVolume;
@@ -220,6 +138,5 @@ final class ClientPrefs
 
 		// Respectfully close the saves to prevent data leaks
 		optionsData.close();
-		controlsData.close();
 	}
 }
