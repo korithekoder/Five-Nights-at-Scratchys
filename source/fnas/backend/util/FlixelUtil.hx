@@ -74,7 +74,7 @@ final class FlixelUtil
 			sound.play();
 			CacheUtil.currentReverbSoundsAmount++;
 			// Recycle the sound after it finishes playing
-			new FlxTimer().start((sound.length / 1000) + (decayTime / 1.5), (_) ->
+			new FlxTimer().start((sound.length / 1000) + decayTime, (_) ->
 			{
 				sound.filter.clearEffects();
 				sound.filter = null;

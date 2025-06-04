@@ -42,8 +42,6 @@ class InitState extends FlxState
 		// Log that we are setting up fnas
 		LoggerUtil.log('INITIALIZING FNAS SETUP', INFO, false);
 
-		trace(AssetUtil.getJsonData(PathUtil.ofJson('tight-spot')));
-
 		// Assign and configure Flixel settings
 		configureFlixelSettings();
 

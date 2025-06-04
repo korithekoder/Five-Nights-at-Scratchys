@@ -36,7 +36,7 @@ final class Constants
 	/**
 	 * The maximum amount of reverb sound effects that can be played at once.
 	 */
-	public static final REVERB_SOUND_EFFECT_LIMIT:Int = 15;
+	public static final REVERB_SOUND_EFFECT_LIMIT:Int = 10;
 
 	function new() {}
 }

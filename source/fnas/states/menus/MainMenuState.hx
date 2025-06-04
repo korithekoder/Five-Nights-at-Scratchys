@@ -1,5 +1,7 @@
 package fnas.states.menus;
 
+import fnas.objects.ui.ClickableText;
+import flixel.FlxSprite;
 import flixel.util.FlxColor;
 import flixel.group.FlxSpriteGroup;
 import fnas.backend.util.CacheUtil;
@@ -20,7 +22,11 @@ class MainMenuState extends FlxState
 	var warningTextGroup:FlxSpriteGroup;
 
 	var titleText:FlxText;
+	var scratchy:FlxSprite;
 	var mainMenuGroup:FlxSpriteGroup;
+
+	var buttonIds:Array<String> = ['Play', 'Quit'];
+	var buttonFunctions:Map<String, Void->Void>;
 
 	override function create():Void
 	{
@@ -32,11 +38,11 @@ class MainMenuState extends FlxState
 
 		warningText = new FlxText();
 		warningText.text = 'This game contains flashing lights and many jumpscares!\n'
-			+ 'If you do not like that, it\'s best if you turn back now, as\n'
+			+ 'If you cannot handle that, then it\'s best if you turn back now, as\n'
 			+ 'this game isn\'t for you...';
-		warningText.color = FlxColor.RED;
+		warningText.color = FlxColor.WHITE;
 		warningText.alignment = CENTER;
-		warningText.size = 25;
+		warningText.size = 22;
 		warningText.updateHitbox();
 		warningText.screenCenter(X);
 		warningText.y = (FlxG.height / 2) + 10;
@@ -56,18 +62,64 @@ class MainMenuState extends FlxState
 		mainMenuGroup.alpha = 0;
 		add(mainMenuGroup);
 
+		scratchy = new FlxSprite();
+		scratchy.loadGraphic(PathUtil.ofImage('main-menu/mm-scratchy-1'));
+		scratchy.scale.set(2.3, 2.3);
+		scratchy.updateHitbox();
+		scratchy.x = (FlxG.width - scratchy.width) + 5;
+		scratchy.y = (FlxG.height - scratchy.height) + 60;
+		mainMenuGroup.add(scratchy);
+
 		titleText = new FlxText();
 		titleText.text = 'Five\nNights\nat\nScratchy\'s';
 		titleText.size = 64;
 		titleText.updateHitbox();
-		titleText.setPosition(40, 115);
+		titleText.setPosition(40);
+		titleText.screenCenter(Y);
+		titleText.y -= 60;
 		mainMenuGroup.add(titleText);
+
+		buttonFunctions = [
+			'Play' => () ->
+			{
+				FlixelUtil.closeGame();
+			},
+			'Quit' => () ->
+			{
+				FlixelUtil.closeGame();
+			}
+		];
+
+		// Create the buttons you see on the menu
+		var newY:Float = titleText.y + titleText.height + 50;
+		for (btn in buttonIds)
+		{
+			var b:ClickableText = new ClickableText();
+			b.text = btn;
+			b.size = 50;
+			b.updateHitbox();
+			b.x = titleText.x;
+			b.y = newY;
+			b.updateHoverBounds();
+			b.onClick = buttonFunctions.get(btn);
+			b.onHover = () ->
+			{
+				b.text = '> $btn';
+				FlxG.sound.play(PathUtil.ofSound('camera-blip'));
+			};
+			b.onHoverLost = () ->
+			{
+				b.text = btn;
+			};
+			mainMenuGroup.add(b);
+			newY += b.height + 5;
+		}
 
 		// Play menu music
 		FlxG.sound.playMusic(PathUtil.ofMusic('menu-music'), 0);
 
 		// Slowly bring up the volume of the menu music
-		FlxTween.num(FlxG.sound.music.volume, 0.75, 15, (n:Float) ->
+		FlxTween.num(FlxG.sound.music.volume, 0.45, 15, (n:Float) ->
 		{
 			FlxG.sound.music.volume = n;
 		});
@@ -88,30 +140,51 @@ class MainMenuState extends FlxState
 	{
 		super.update(elapsed);
 
-		if (FlxG.keys.justPressed.SPACE)
+		if (!CacheUtil.alreadySawWarning)
 		{
-			FlixelUtil.playSoundWithReverb(PathUtil.ofSound('ringtone'), 1, 5.5);
+			// If the user presses ENTER, then
+			// skip the warning
+			if (FlxG.keys.justPressed.ENTER)
+			{
+				// Ensure that we don't see the warning again
+				CacheUtil.alreadySawWarning = true;
+				// Cancel the already ongoing tween and
+				// go straight to the main menu
+				FlxTween.cancelTweensOf(warningTextGroup);
+				FlxTween.tween(warningTextGroup, {alpha: 0}, 2, {
+					onComplete: (_) ->
+					{
+						displayMainMenu();
+					}
+				});
+			}
 		}
 	}
 
 	function displayMainMenu():Void
 	{
+		// Ensure that we don't see the warning again
+		CacheUtil.alreadySawWarning = true;
+		// Slowly make the main menu appear
 		FlxTween.tween(mainMenuGroup, {alpha: 1}, 3.5);
 	}
 
 	function displayWarning():Void
 	{
-		// Ensure that we don't see this warning again
-		CacheUtil.alreadySawWarning = true;
 		// Bring up the visibility for the warning text
-		FlxTween.tween(warningTextGroup, {alpha: 1}, 5, {onComplete: (_) ->
-		{
-			// When the warning text is done losing its transparency, then
-			// start another tween to hide it again but with a delay
-			FlxTween.tween(warningTextGroup, {alpha: 0}, 5, {startDelay: 6, onComplete: (_) ->
+		FlxTween.tween(warningTextGroup, {alpha: 1}, 5, {
+			onComplete: (_) ->
 			{
-				displayMainMenu();
-			}});
-		}});
+				// When the warning text is done losing its transparency, then
+				// start another tween to hide it again but with a delay
+				FlxTween.tween(warningTextGroup, {alpha: 0}, 5, {
+					startDelay: 6,
+					onComplete: (_) ->
+					{
+						displayMainMenu();
+					}
+				});
+			}
+		});
 	}
 }
