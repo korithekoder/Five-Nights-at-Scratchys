@@ -1,5 +1,8 @@
 package fnas.backend.util;
 
+import flixel.FlxG;
+import flixel.graphics.frames.FlxAtlasFrames;
+import flixel.FlxSprite;
 import haxe.Json;
 import openfl.utils.Assets;
 
@@ -40,6 +43,47 @@ final class AssetUtil
 		}
 
 		return result.toString();
+	}
+
+	/**
+	 * Create a new camera blip sprite with a pre-made 
+	 * camera blip animation made with it. ***Note that it is 
+	 * not visible by default.***
+	 * 
+	 * @return A new camera blip sprite.
+	 */
+	public static function generateCameraBlipSprite():FlxSprite
+	{
+		var cameraBlip:FlxSprite = new FlxSprite();
+		var paths:Array<String> = PathUtil.ofSpritesheet('camera/camera-blip');
+		var frames:Array<Int> = [];
+
+		for (i in 0...8)
+		{
+			frames.push(i);
+		}
+
+		cameraBlip.frames = FlxAtlasFrames.fromSparrow(paths[0], paths[1]);
+		cameraBlip.animation.addByIndices('blip', 'camera-blip_', frames, '', 50, false);
+		cameraBlip.animation.onFrameChange.add((name:String, frameNumber:Int, frameIndex:Int) ->
+		{
+			if (name == 'blip' && !cameraBlip.animation.finished)
+			{
+				cameraBlip.visible = true;
+			}
+		});
+		cameraBlip.animation.onFinish.add(function(name:String)
+		{
+			if (name == 'blip')
+			{
+				cameraBlip.visible = false;
+			}
+		});
+		cameraBlip.setGraphicSize(FlxG.width, FlxG.height);
+		cameraBlip.updateHitbox();
+		cameraBlip.setPosition(0, 20);
+		cameraBlip.visible = false;
+		return cameraBlip;
 	}
 
 	/**

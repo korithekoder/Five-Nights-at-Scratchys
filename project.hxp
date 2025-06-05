@@ -441,7 +441,7 @@ class Project extends HXProject
 		addAssetPath('assets/fonts', 'assets/fonts', 'default', ['*.ttf'], []);
 
 		// Add image assets
-		addAssetPath('assets/images', 'assets/images', 'default', ['*.png'], []);
+		addAssetPath('assets/images', 'assets/images', 'default', ['*.png', '*.xml'], []);
 
 		// Add shader frag assets
 		addAssetPath('assets/shaders', 'assets/shaders', 'default', ['*.frag'], []);

@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TextureAtlas imagePath="camera-blip.png">
+    <SubTexture name="camera-blip_0" x="0" y="0" width="960" height="720" frameX="0" frameY="0" frameWidth="960" frameHeight="720" />
+    <SubTexture name="camera-blip_1" x="960" y="0" width="960" height="672" frameX="0" frameY="0" frameWidth="960" frameHeight="672" />
+    <SubTexture name="camera-blip_2" x="0" y="720" width="960" height="616" frameX="0" frameY="0" frameWidth="960" frameHeight="616" />
+    <SubTexture name="camera-blip_3" x="960" y="1336" width="960" height="578" frameX="0" frameY="0" frameWidth="960" frameHeight="578" />
+    <SubTexture name="camera-blip_4" x="960" y="720" width="960" height="608" frameX="0" frameY="0" frameWidth="960" frameHeight="608" />
+    <SubTexture name="camera-blip_5" x="0" y="1336" width="960" height="584" frameX="0" frameY="0" frameWidth="960" frameHeight="584" />
+    <SubTexture name="camera-blip_6" x="1920" y="0" width="960" height="463" frameX="0" frameY="0" frameWidth="960" frameHeight="463" />
+    <SubTexture name="camera-blip_7" x="1920" y="463" width="960" height="418" frameX="0" frameY="0" frameWidth="960" frameHeight="418" />
+</TextureAtlas>

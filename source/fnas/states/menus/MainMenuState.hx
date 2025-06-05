@@ -1,5 +1,7 @@
 package fnas.states.menus;
 
+import fnas.backend.util.AssetUtil;
+import flixel.util.FlxTimer;
 import fnas.objects.ui.ClickableText;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
@@ -25,8 +27,14 @@ class MainMenuState extends FlxState
 	var scratchy:FlxSprite;
 	var mainMenuGroup:FlxSpriteGroup;
 
+	var newNightText:FlxText;
+
+	var cameraBlip:FlxSprite;
+
 	var buttonIds:Array<String> = ['Play', 'Quit'];
 	var buttonFunctions:Map<String, Void->Void>;
+
+	var scratchyChangeTimer:FlxTimer;
 
 	override function create():Void
 	{
@@ -79,10 +87,26 @@ class MainMenuState extends FlxState
 		titleText.y -= 60;
 		mainMenuGroup.add(titleText);
 
+		newNightText = new FlxText();
+		newNightText.text = 'Night 1\n12:00 AM';
+		newNightText.size = 80;
+		newNightText.alignment = CENTER;
+		newNightText.updateHitbox();
+		newNightText.screenCenter(XY);
+		newNightText.visible = false;
+		add(newNightText);
+
+		cameraBlip = AssetUtil.generateCameraBlipSprite();
+		add(cameraBlip);
+
 		buttonFunctions = [
 			'Play' => () ->
 			{
-				FlixelUtil.closeGame();
+				mainMenuGroup.visible = false;
+				newNightText.visible = true;
+				cameraBlip.animation.play('blip');
+				FlxG.sound.music.stop();
+				FlixelUtil.playSoundWithReverb(PathUtil.ofSound('camera-blip'), 1, 7);
 			},
 			'Quit' => () ->
 			{
@@ -114,6 +138,9 @@ class MainMenuState extends FlxState
 			mainMenuGroup.add(b);
 			newY += b.height + 5;
 		}
+
+		// Set the timers for Scratchy
+		scratchyChangeTimer = new FlxTimer();
 
 		// Play menu music
 		FlxG.sound.playMusic(PathUtil.ofMusic('menu-music'), 0);
@@ -167,6 +194,19 @@ class MainMenuState extends FlxState
 		CacheUtil.alreadySawWarning = true;
 		// Slowly make the main menu appear
 		FlxTween.tween(mainMenuGroup, {alpha: 1}, 3.5);
+
+		// Start an infinitely looped timer that makes Scratchy
+		// change for a split second
+		scratchyChangeTimer.start(1.45, (_) ->
+		{
+			scratchy.loadGraphic(PathUtil.ofImage('main-menu/mm-scratchy-${FlxG.random.int(2, 4)}'));
+			resetScratchy();
+			new FlxTimer().start(FlxG.random.float(0.1, 0.2), (_) ->
+			{
+				scratchy.loadGraphic(PathUtil.ofImage('main-menu/mm-scratchy-1'));
+				resetScratchy();
+			});
+		}, 0);
 	}
 
 	function displayWarning():Void
@@ -186,5 +226,12 @@ class MainMenuState extends FlxState
 				});
 			}
 		});
+	}
+
+	function resetScratchy():Void
+	{
+		scratchy.updateHitbox();
+		scratchy.x = (FlxG.width - scratchy.width) + 5;
+		scratchy.y = (FlxG.height - scratchy.height) + 60;
 	}
 }

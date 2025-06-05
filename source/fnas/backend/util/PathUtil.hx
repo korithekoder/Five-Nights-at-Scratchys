@@ -82,23 +82,6 @@ final class PathUtil
 	}
 
 	/**
-	 * Get the paths of an entity's sprite sheet image and `.xml` file.
-	 * Note that this will return an array of both pathways, with the
-	 * first element being to the image and the second one being its
-	 * `.xml` file.
-	 * 
-	 * ***WARNING***: The entity's sprite sheet image and `.xml` file *must*
-	 * be in the same location or otherwise this function will fail.
-	 * 
-	 * @param name The name of the entity.
-	 * @return     An array of the paths to the image and the `.xml` file.
-	 */
-	public static inline function ofEntitySpritesheet(name:String):Array<String>
-	{
-		return ['assets/entities/textures/$name.png', 'assets/entities/textures/$name.xml'];
-	}
-
-	/**
 	 * Get the path to a `.frag` shader file.
 	 * 
 	 * @param name The name of the `.frag` file.
