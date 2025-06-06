@@ -1,4 +1,4 @@
-package fnas.objects.ui;
+package fnas.ui;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -50,6 +50,11 @@ class ClickableSprite extends FlxSprite
 	public var isHovered:Bool = false;
 
 	/**
+	 * Is it allowed to click `this` sprite?
+	 */
+	public var canClick:Bool = true;
+
+	/**
 	 * Constructor.
 	 * 
 	 * @param x      The X position of `this` clickable sprite.
@@ -68,7 +73,7 @@ class ClickableSprite extends FlxSprite
 	{
 		super.update(elapsed);
 
-		if (isHoveringOverMouse())
+		if (isHoveringOverMouse() && canClick)
 		{
 			if (!isHovered)
 			{

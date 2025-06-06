@@ -1,8 +1,9 @@
 package;
 
+import fnas.menus.WebWarningState;
 import fnas.backend.util.AssetUtil;
 import openfl.events.KeyboardEvent;
-import fnas.states.menus.MainMenuState;
+import fnas.menus.MainMenuState;
 import flixel.tweens.FlxTween;
 import flixel.math.FlxMath;
 import fnas.backend.util.FlixelUtil;
@@ -62,7 +63,7 @@ class InitState extends FlxState
 		#end
 
 		// Switch to the main menu state after everything has loaded
-		FlxG.switchState(() -> new MainMenuState());
+		FlxG.switchState(() -> new #if !web MainMenuState() #else WebWarningState() #end);
 	}
 
 	function configureFlixelSettings():Void

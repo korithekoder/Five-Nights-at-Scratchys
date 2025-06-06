@@ -444,7 +444,10 @@ class Project extends HXProject
 		addAssetPath('assets/images', 'assets/images', 'default', ['*.png', '*.xml'], []);
 
 		// Add shader frag assets
-		addAssetPath('assets/shaders', 'assets/shaders', 'default', ['*.frag'], []);
+		if (isDesktop())
+		{
+			addAssetPath('assets/shaders', 'assets/shaders', 'default', ['*.frag'], []);
+		}
 
 		// Add ambience, music and sound assets for web (.mp3)
 		if (isWeb())

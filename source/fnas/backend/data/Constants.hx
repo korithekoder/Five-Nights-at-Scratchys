@@ -38,5 +38,16 @@ final class Constants
 	 */
 	public static final REVERB_SOUND_EFFECT_LIMIT:Int = 10;
 
+	/**
+	 * How far the user has to move the mouse on the X plane on both sides
+	 * before the office can scroll side to side.
+	 */
+	public static final OFFICE_SCROLL_RANGE:Float = 200;
+
+	/**
+	 * How fast the office scrolls side to side.
+	 */
+	public static final OFFICE_SCROLL_SPEED:Float = 600;
+
 	function new() {}
 }

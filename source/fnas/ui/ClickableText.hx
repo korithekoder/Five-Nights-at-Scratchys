@@ -1,4 +1,4 @@
-package fnas.objects.ui;
+package fnas.ui;
 
 import flixel.FlxG;
 import flixel.text.FlxText;
@@ -50,6 +50,11 @@ class ClickableText extends FlxText
 	public var isHovered:Bool = false;
 
 	/**
+	 * Is it allowed to click `this` sprite?
+	 */
+	public var canClick:Bool = true;
+
+	/**
 	 * Constructor.
 	 * 
 	 * @param x    The X position of `this` clickable text.
@@ -69,7 +74,7 @@ class ClickableText extends FlxText
 	{
 		super.update(elapsed);
 
-		if (this.isHoveringOverMouse())
+		if (this.isHoveringOverMouse() && canClick)
 		{
 			if (!this.isHovered)
 			{

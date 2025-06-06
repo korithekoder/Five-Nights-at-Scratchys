@@ -65,6 +65,17 @@ final class PathUtil
 	}
 
 	/**
+	 * Get the path of an ambience asset.
+	 * 
+	 * @param name The name of the ambience (this does not include the file extension).
+	 * @return     The path of the ambience.
+	 */
+	public static inline function ofAmbience(name:String):String
+	{
+		return 'assets/ambience/$name${#if html5 '.mp3' #else '.ogg' #end}';
+	}
+
+	/**
 	 * Get the paths of a sprite sheets' image and `.xml` file.
 	 * Note that this will return an array of both pathways, with the
 	 * first element being to the image and the second one being its

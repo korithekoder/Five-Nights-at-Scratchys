@@ -1,5 +1,7 @@
 package fnas.backend.util;
 
+import openfl.net.URLRequest;
+import openfl.Lib;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -103,6 +105,16 @@ final class FlixelUtil
 				FlxTween.tween(obj, options, duration, types);
 			}
 		}
+	}
+
+	/**
+	 * Open a new URL in the user's browser.
+	 * 
+	 * @param url The link to the website to open.
+	 */
+	public static function openURL(url:String):Void
+	{
+		Lib.getURL(new URLRequest(url));
 	}
 
 	/**

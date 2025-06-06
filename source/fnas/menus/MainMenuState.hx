@@ -1,8 +1,9 @@
-package fnas.states.menus;
+package fnas.menus;
 
+import fnas.play.PlayState;
 import fnas.backend.util.AssetUtil;
 import flixel.util.FlxTimer;
-import fnas.objects.ui.ClickableText;
+import fnas.ui.ClickableText;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 import flixel.group.FlxSpriteGroup;
@@ -102,11 +103,28 @@ class MainMenuState extends FlxState
 		buttonFunctions = [
 			'Play' => () ->
 			{
+				// Make sure we can't click the buttons clickable
+				setButtonsClickable(false);
+				// Hide the main menu
 				mainMenuGroup.visible = false;
+				// Make the new night text visible
 				newNightText.visible = true;
+				// Play the camera blip animation
 				cameraBlip.animation.play('blip');
+				// Stop the music
 				FlxG.sound.music.stop();
+				// Make a spoopy camera blip echo
 				FlixelUtil.playSoundWithReverb(PathUtil.ofSound('camera-blip'), 1, 7);
+				// Add a delay before we switch to the main game
+				new FlxTimer().start(4, (_) ->
+				{
+					FlxTween.tween(newNightText, {alpha: 0}, 3, {
+						onComplete: (_) ->
+						{
+							FlxG.switchState(() -> new PlayState());
+						}
+					});
+				});
 			},
 			'Quit' => () ->
 			{
@@ -125,7 +143,12 @@ class MainMenuState extends FlxState
 			b.x = titleText.x;
 			b.y = newY;
 			b.updateHoverBounds();
-			b.onClick = buttonFunctions.get(btn);
+			b.canClick = false;
+			b.onClick = () ->
+			{
+				b.canClick = false;
+				buttonFunctions.get(btn)();
+			};
 			b.onHover = () ->
 			{
 				b.text = '> $btn';
@@ -178,7 +201,7 @@ class MainMenuState extends FlxState
 				// Cancel the already ongoing tween and
 				// go straight to the main menu
 				FlxTween.cancelTweensOf(warningTextGroup);
-				FlxTween.tween(warningTextGroup, {alpha: 0}, 2, {
+				FlxTween.tween(warningTextGroup, {alpha: 0}, 1, {
 					onComplete: (_) ->
 					{
 						displayMainMenu();
@@ -194,6 +217,9 @@ class MainMenuState extends FlxState
 		CacheUtil.alreadySawWarning = true;
 		// Slowly make the main menu appear
 		FlxTween.tween(mainMenuGroup, {alpha: 1}, 3.5);
+
+		// Make the buttons clickable
+		setButtonsClickable();
 
 		// Start an infinitely looped timer that makes Scratchy
 		// change for a split second
@@ -233,5 +259,17 @@ class MainMenuState extends FlxState
 		scratchy.updateHitbox();
 		scratchy.x = (FlxG.width - scratchy.width) + 5;
 		scratchy.y = (FlxG.height - scratchy.height) + 60;
+	}
+
+	function setButtonsClickable(value:Bool = true):Void
+	{
+		for (member in mainMenuGroup.members)
+		{
+			if (Std.isOfType(member, ClickableText))
+			{
+				var b:ClickableText = cast(member, ClickableText);
+				b.canClick = value;
+			}
+		}
 	}
 }
