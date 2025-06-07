@@ -1,5 +1,7 @@
 package fnas.menus;
 
+import openfl.ui.MouseCursor;
+import openfl.ui.Mouse;
 import fnas.play.PlayState;
 import fnas.backend.util.AssetUtil;
 import flixel.util.FlxTimer;
@@ -142,19 +144,20 @@ class MainMenuState extends FlxState
 			b.updateHitbox();
 			b.x = titleText.x;
 			b.y = newY;
-			b.updateHoverBounds();
-			b.canClick = false;
-			b.onClick = () ->
+			b.behavior.updateHoverBounds(b.x, b.y, b.width, b.height);
+			b.behavior.canClick = false;
+			b.behavior.onClick = () ->
 			{
-				b.canClick = false;
+				b.behavior.canClick = false;
+				Mouse.cursor = MouseCursor.ARROW;
 				buttonFunctions.get(btn)();
 			};
-			b.onHover = () ->
+			b.behavior.onHover = () ->
 			{
 				b.text = '> $btn';
 				FlxG.sound.play(PathUtil.ofSound('camera-blip'));
 			};
-			b.onHoverLost = () ->
+			b.behavior.onHoverLost = () ->
 			{
 				b.text = btn;
 			};
@@ -268,7 +271,7 @@ class MainMenuState extends FlxState
 			if (Std.isOfType(member, ClickableText))
 			{
 				var b:ClickableText = cast(member, ClickableText);
-				b.canClick = value;
+				b.behavior.canClick = value;
 			}
 		}
 	}

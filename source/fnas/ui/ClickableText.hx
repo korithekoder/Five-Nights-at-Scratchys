@@ -1,6 +1,5 @@
 package fnas.ui;
 
-import flixel.FlxG;
 import flixel.text.FlxText;
 
 /**
@@ -9,172 +8,41 @@ import flixel.text.FlxText;
 class ClickableText extends FlxText
 {
 	/**
-	 * Called when `this` clickable text is clicked on.
+	 * The behavior for this clickable sprite.
 	 */
-	public var onClick:Void->Void = () -> {};
-
-	/**
-	 * Called when `this` clickable text is hovered on.
-	 */
-	public var onHover:Void->Void = () -> {};
-
-	/**
-	 * Called when `this` clickable text's hover boundaries are no longer overlapping
-	 * the mouse.
-	 */
-	public var onHoverLost:Void->Void = () -> {};
-
-	/**
-	 * X bounds for the *left* side of `this` clickable text.
-	 */
-	public var bxl:Float;
-
-	/**
-	 * X bounds for the *right* side of `this` clickable text.
-	 */
-	public var bxr:Float;
-
-	/**
-	 * Y bounds for the *top* side of `this` clickable text.
-	 */
-	public var byt:Float;
-
-	/**
-	 * Y bounds for the *bottom* side of `this` clickable text.
-	 */
-	public var byb:Float;
-
-	/**
-	 * Is `this` current clickable text being hovered on?
-	 */
-	public var isHovered:Bool = false;
-
-	/**
-	 * Is it allowed to click `this` sprite?
-	 */
-	public var canClick:Bool = true;
+	public var behavior:ClickableBehavior;
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param x    The X position of `this` clickable text.
-	 * @param y    The Y position of `this` clickable text.
-	 * @param text The text that is displayed for `this` clickable text. 
+	 * @param x The X position of `this` clickable sprite.
+	 * @param y The Y position of `this` clickable sprite.
 	 */
-	public function new(x:Float = 0, y:Float = 0, text:String = '')
+	public function new(x:Float = 0, y:Float = 0)
 	{
-		super(x, y, text);
+		super(x, y);
+		behavior = new ClickableBehavior();
 	}
 
-	// -----------------------------
+	// =============================
 	//            METHODS
-	// -----------------------------
+	// =============================
 
 	override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-
-		if (this.isHoveringOverMouse() && canClick)
-		{
-			if (!this.isHovered)
-			{
-				this.onHover();
-				this.isHovered = true;
-			}
-
-			if (FlxG.mouse.justPressed)
-			{
-				this.onClick();
-			}
-		}
-
-		if (!this.isHoveringOverMouse() && this.isHovered)
-		{
-			this.isHovered = false;
-			this.onHoverLost();
-		}
+		behavior.update(x, y, width, height);
 	}
 
 	override function updateHitbox():Void
 	{
 		super.updateHitbox();
-		updateHoverBounds();
+		behavior.updateHoverBounds(x, y, width, height);
 	}
 
 	override function setPosition(x:Float = 0.0, y:Float = 0.0):Void
 	{
 		super.setPosition(x, y);
-		this.updateHoverBounds();
-	}
-
-	/**
-	 * Gets `this` clickable button's hover bounds as an array.
-	 * @return The hover bounds as an array.
-	 */
-	public inline function getHoverBoundsArray():Array<Float>
-	{
-		return [bxl, bxr, byt, byb];
-	}
-
-	/**
-	 * Sets the ***X*** hover bounds.
-	 * 
-	 * @param bxl Left X hover bound.
-	 * @param bxr Right X hover bound.
-	 */
-	public function setHoverBoundsX(bxl:Float, bxr:Float):Void
-	{
-		this.bxl = bxl;
-		this.bxr = bxr;
-	}
-
-	/**
-	 * Sets the ***Y*** hover bounds.
-	 * 
-	 * @param byt Top Y hover bound.
-	 * @param byb Bottom Y hover bound.
-	 */
-	public function setHoverBoundsY(byt:Float, byb:Float):Void
-	{
-		this.byt = byt;
-		this.byb = byb;
-	}
-
-	/**
-	 * Sets the hover bounds for all four sides of `this`
-	 * clickable text. 
-	 * 
-	 * @param bxl Left X hover bound.
-	 * @param bxr Right X hover bound.
-	 * @param byt Top Y hover bound.
-	 * @param byb Bottom Y hover bound.
-	 */
-	public function setHoverBounds(bxl:Float, bxr:Float, byt:Float, byb:Float):Void
-	{
-		this.bxl = bxl;
-		this.bxr = bxr;
-		this.byt = byt;
-		this.byb = byb;
-	}
-
-	/**
-	 * Reset the hover bounds to match `this` clickable text's hitbox.
-	 */
-	public function updateHoverBounds():Void
-	{
-		this.bxl = this.x;
-		this.bxr = this.x + this.width;
-		this.byt = this.y;
-		this.byb = this.y + this.height;
-	}
-
-	/**
-	 * Is `this` clickable text's hover bounds overlapping the mouse?
-	 * 
-	 * @return If the mouse is inside `this` clickable text's hover bounds.
-	 */
-	public inline function isHoveringOverMouse():Bool
-	{
-		return (FlxG.mouse.x >= this.bxl) && (FlxG.mouse.y >= this.byt) && (FlxG.mouse.y <= this.byb) && (FlxG.mouse.x <= this.bxr);
+		behavior.updateHoverBounds(x, y, width, height);
 	}
 }

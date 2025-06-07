@@ -1,9 +1,12 @@
 package fnas.play;
 
+import flixel.sound.filters.FlxSoundFilter;
+import fnas.backend.util.FlixelUtil;
+import flixel.sound.filters.effects.FlxSoundReverbEffect;
+import flixel.sound.filters.FlxFilteredSound;
+import flixel.util.FlxTimer;
 import flixel.text.FlxText;
 import flixel.FlxCamera;
-import openfl.ui.MouseCursor;
-import openfl.ui.Mouse;
 import fnas.ui.ClickableSprite;
 import fnas.backend.util.LoggerUtil;
 import flixel.group.FlxSpriteGroup;
@@ -34,6 +37,7 @@ class PlayState extends FlxState
 	// ========================
 	var base:FlxSprite;
 	var poster:ClickableSprite;
+	var lamp:FlxSprite;
 
 	//
 	// UI TEXT AND SPRITES
@@ -45,6 +49,12 @@ class PlayState extends FlxState
 	// SOUNDS
 	// ========================
 	var fanAmb:FlxSound;
+	var phoneCallSfx:FlxFilteredSound;
+
+	//
+	// TIMERS
+	// ========================
+	var lampFlickerTimer:FlxTimer;
 
 	override function create():Void
 	{
@@ -63,6 +73,12 @@ class PlayState extends FlxState
 
 		// Check if the user is trying to look around
 		scrollOffice(elapsed);
+
+		if (FlxG.keys.justPressed.SPACE && phoneCallSfx.playing)
+		{
+			phoneCallSfx.stop();
+			FlixelUtil.playSoundWithReverb(PathUtil.ofSound('phone-pick-up'), 0.75, 4);
+		}
 	}
 
 	//
@@ -71,6 +87,7 @@ class PlayState extends FlxState
 
 	function setupCameras():Void
 	{
+		LoggerUtil.log('Setting up cameras');
 		// UI camera
 		uiCamera = new FlxCamera();
 		uiCamera.bgColor.alpha = 0;
@@ -106,23 +123,38 @@ class PlayState extends FlxState
 		poster.setPosition(base.x + 70, base.y + 60);
 		poster.setGraphicSize(0, 160);
 		poster.updateHitbox();
-		poster.onClick = () ->
+		poster.behavior.onClick = () ->
 		{
-			FlxG.sound.play(PathUtil.ofSound('poster-honk'), 0.5);
-		};
-		poster.onHover = () ->
-		{
-			Mouse.cursor = MouseCursor.BUTTON;
-		};
-		poster.onHoverLost = () ->
-		{
-			Mouse.cursor = MouseCursor.ARROW;
+			FlixelUtil.playSoundWithReverb(PathUtil.ofSound('poster-honk'), 0.35, 3);
 		};
 		officeGroup.add(poster);
+
+		// Create the flickering lamp
+		lamp = new FlxSprite();
+		lamp.loadGraphic(PathUtil.ofImage('office/lamp-1'));
+		lamp.setGraphicSize(400);
+		lamp.updateHitbox();
+		lamp.screenCenter(X);
+		lamp.y = -5;
+		officeGroup.add(lamp);
+		lampFlickerTimer = new FlxTimer();
+		lampFlickerTimer.start(2.4, (_) ->
+		{
+			lamp.loadGraphic(PathUtil.ofImage('office/lamp-2'));
+			lamp.x += 7;
+			lamp.y += 2.75;
+			new FlxTimer().start(FlxG.random.float(0.05, 0.1), (_) ->
+			{
+				lamp.loadGraphic(PathUtil.ofImage('office/lamp-1'));
+				lamp.x -= 7;
+				lamp.y -= 2.75;
+			});
+		}, 0);
 	}
 
 	function setupUI():Void
 	{
+		LoggerUtil.log('Setting up UI');
 		// Time text
 		timeText = new FlxText();
 		timeText.text = '12:00 AM';
@@ -150,6 +182,20 @@ class PlayState extends FlxState
 		fanAmb.loadEmbedded(PathUtil.ofAmbience('office-fan'), true);
 		FlxG.sound.list.add(fanAmb);
 		fanAmb.play();
+
+		// Phone call sfx
+		var effect:FlxSoundReverbEffect = new FlxSoundReverbEffect();
+		effect.decayTime = 3.6;
+		phoneCallSfx = new FlxFilteredSound();
+		phoneCallSfx.loadEmbedded(PathUtil.ofSound('ringtone'), true);
+		phoneCallSfx.volume = 0.35;
+		phoneCallSfx.filter = new FlxSoundFilter();
+		phoneCallSfx.filter.addEffect(effect);
+		FlxG.sound.list.add(phoneCallSfx);
+		new FlxTimer().start(4, (_) ->
+		{
+			phoneCallSfx.play();
+		});
 	}
 
 	//
@@ -160,6 +206,7 @@ class PlayState extends FlxState
 	{
 		var isInRange:Bool = (FlxG.mouse.viewX < Constants.OFFICE_SCROLL_RANGE)
 			|| (FlxG.mouse.viewX > (FlxG.width - Constants.OFFICE_SCROLL_RANGE));
+
 		if (isInRange)
 		{
 			var scrollDirection:Float = (FlxG.mouse.viewX < Constants.OFFICE_SCROLL_RANGE) ? 1 : -1; // 1 = left, -1 = Right
@@ -179,7 +226,7 @@ class PlayState extends FlxState
 			}
 		}
 		// Center the click bounds to be on Scratchy's nose
-		poster.setHoverBounds(
+		poster.behavior.setHoverBounds(
 			(poster.x + poster.width / 2) - 16,
 			(poster.x + poster.width / 2) - 6,
 			(poster.y + poster.height / 2) - 2,
