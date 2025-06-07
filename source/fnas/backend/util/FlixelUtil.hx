@@ -57,6 +57,7 @@ final class FlixelUtil
 	 */
 	public static function playSoundWithReverb(path:String, volume:Float = 1, decayTime:Float = 4):Void
 	{
+		#if REVERB_ALLOWED
 		if (!(CacheUtil.currentReverbSoundsAmount > Constants.REVERB_SOUND_EFFECT_LIMIT))
 		{
 			// Make the sound and filter
@@ -66,6 +67,7 @@ final class FlixelUtil
 			effect.decayTime = decayTime;
 			// Load the sound
 			sound.loadEmbedded(path);
+			sound.volume = volume;
 			sound.filter = new FlxSoundFilter();
 			sound.filter.addEffect(effect);
 			// Add the sound to the game so that way it
@@ -86,6 +88,9 @@ final class FlixelUtil
 				CacheUtil.currentReverbSoundsAmount--;
 			});
 		}
+		#else
+		FlxG.sound.play(path, volume);
+		#end
 	}
 
 	/**

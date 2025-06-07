@@ -114,6 +114,12 @@ class Project extends HXProject
 	 */
 	static final LOGGING_ALLOWED:FeatureFlag = 'LOGGING_ALLOWED';
 
+	/**
+	 * Authorizes the game to use programmatically-made, reverb-like
+	 * sounds for a  S P O O P Y  effect. :ghost: 
+	 */
+	static final REVERB_ALLOWED:FeatureFlag = 'REVERB_ALLOWED';
+
 	public function new()
 	{
 		super();
@@ -355,6 +361,9 @@ class Project extends HXProject
 
 		// Enables logging if the user is playing on desktop
 		LOGGING_ALLOWED.apply(this, isDesktop());
+
+		// Allows sounds to echo if on desktop
+		REVERB_ALLOWED.apply(this, isDesktop());
 	}
 
 	/**
