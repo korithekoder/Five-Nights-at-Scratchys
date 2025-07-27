@@ -105,7 +105,7 @@ final class LoggerUtil
 		try
 		{
 			// Format the log message with log type and timestamp
-			var newLog:String = '[$logType][$timestamp]: $logMsg';
+			var newLog:String = '$timestamp [FNAS] [$logType]: $logMsg';
 			// Write the formatted log message to the file, followed by a newline
 			file.writeString('$newLog\n');
 			// Flush the file buffer to ensure the log is written immediately

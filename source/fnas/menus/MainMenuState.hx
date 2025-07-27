@@ -1,11 +1,11 @@
 package fnas.menus;
 
+import fnas.ui.UIClickableText;
 import openfl.ui.MouseCursor;
 import openfl.ui.Mouse;
 import fnas.play.PlayState;
 import fnas.backend.util.AssetUtil;
 import flixel.util.FlxTimer;
-import fnas.ui.ClickableText;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 import flixel.group.FlxSpriteGroup;
@@ -48,9 +48,11 @@ class MainMenuState extends FlxState
 		add(warningTextGroup);
 
 		warningText = new FlxText();
-		warningText.text = 'This game contains flashing lights and many jumpscares!\n'
-			+ 'If you cannot handle that, then it\'s best if you turn back now, as\n'
-			+ 'this game isn\'t for you...';
+		warningText.text = 'This game contains flashing lights and many jumpscares
+			If you cannot handle that, then it\'s best if you turn back now, as
+			this game isn\'t for you...
+			
+			(Press ENTER to skip this warning.)';
 		warningText.color = FlxColor.WHITE;
 		warningText.alignment = CENTER;
 		warningText.size = 22;
@@ -105,17 +107,11 @@ class MainMenuState extends FlxState
 		buttonFunctions = [
 			'Play' => () ->
 			{
-				// Make sure we can't click the buttons clickable
 				setButtonsClickable(false);
-				// Hide the main menu
 				mainMenuGroup.visible = false;
-				// Make the new night text visible
 				newNightText.visible = true;
-				// Play the camera blip animation
 				cameraBlip.animation.play('blip');
-				// Stop the music
 				FlxG.sound.music.stop();
-				// Make a spoopy camera blip echo
 				FlixelUtil.playSoundWithReverb(PathUtil.ofSound('camera-blip'), 1, 7);
 				// Add a delay before we switch to the main game
 				new FlxTimer().start(4, (_) ->
@@ -138,7 +134,7 @@ class MainMenuState extends FlxState
 		var newY:Float = titleText.y + titleText.height + 50;
 		for (btn in buttonIds)
 		{
-			var b:ClickableText = new ClickableText();
+			var b:UIClickableText = new UIClickableText();
 			b.text = btn;
 			b.size = 50;
 			b.updateHitbox();
@@ -162,7 +158,7 @@ class MainMenuState extends FlxState
 				b.text = btn;
 			};
 			mainMenuGroup.add(b);
-			newY += b.height + 5;
+			newY += b.height + 15;
 		}
 
 		// Set the timers for Scratchy
@@ -268,9 +264,9 @@ class MainMenuState extends FlxState
 	{
 		for (member in mainMenuGroup.members)
 		{
-			if (Std.isOfType(member, ClickableText))
+			if (Std.isOfType(member, UIClickableText))
 			{
-				var b:ClickableText = cast(member, ClickableText);
+				var b:UIClickableText = cast(member, UIClickableText);
 				b.behavior.canClick = value;
 			}
 		}

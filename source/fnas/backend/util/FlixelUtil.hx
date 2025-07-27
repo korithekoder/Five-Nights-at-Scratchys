@@ -54,8 +54,10 @@ final class FlixelUtil
 	 * @param path      The path to the sound to play.
 	 * @param volume    The volume of the sound.
 	 * @param decayTime How long it echoes for.
+	 * @param onComplete Function to call when the sound finishes playing.
+	 * @return The sound that was played, or `null` if the sound limit has been reached.
 	 */
-	public static function playSoundWithReverb(path:String, volume:Float = 1, decayTime:Float = 4):Void
+	public static function playSoundWithReverb(path:String, volume:Float = 1, decayTime:Float = 4, ?onComplete:Void->Void):FlxSound
 	{
 		#if REVERB_ALLOWED
 		if (!(CacheUtil.currentReverbSoundsAmount > Constants.REVERB_SOUND_EFFECT_LIMIT))
@@ -63,7 +65,7 @@ final class FlixelUtil
 			// Make the sound and filter
 			var sound:FlxFilteredSound = new FlxFilteredSound();
 			var effect = new FlxSoundReverbEffect();
-			// Settings for the echo
+			// Settings for the echoF
 			effect.decayTime = decayTime;
 			// Load the sound
 			sound.loadEmbedded(path);
@@ -86,10 +88,24 @@ final class FlixelUtil
 				FlxG.sound.list.recycle(FlxSound);
 				sound.destroy();
 				CacheUtil.currentReverbSoundsAmount--;
+				if (onComplete != null)
+				{
+					onComplete();
+				}
 			});
+			return sound;
+		}
+		else
+		{
+			return null;
 		}
 		#else
-		FlxG.sound.play(path, volume);
+		var sound:FlxSound = new FlxSound();
+		sound.loadEmbedded(path);
+		sound.onComplete = onComplete;
+		sound.volume = volume;
+		FlxG.sound.list.add(sound);
+		return sound.play();
 		#end
 	}
 

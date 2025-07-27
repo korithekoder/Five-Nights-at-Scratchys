@@ -130,11 +130,7 @@ final class ClientPrefs
 			}
 		}
 
-		// Set the volume to the last used volume the user had
-		if (optionsData.data.lastVolume != null)
-			FlxG.sound.volume = optionsData.data.lastVolume;
-		else
-			FlxG.sound.volume = 1.0;
+		FlxG.sound.volume = 1.0;
 
 		// Respectfully close the saves to prevent data leaks
 		optionsData.close();

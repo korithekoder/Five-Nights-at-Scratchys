@@ -36,9 +36,6 @@ final class SaveUtil
 		// Assign the data
 		optionsSave.data.options = ClientPrefs.getOptions();
 
-		// Save the last volume used
-		optionsSave.data.lastVolume = (CacheUtil.isWindowFocused) ? FlxG.sound.volume : CacheUtil.lastVolumeUsed;
-
 		// For checking if the data saved
 		var didOptionsSave:Bool = optionsSave.flush();
 

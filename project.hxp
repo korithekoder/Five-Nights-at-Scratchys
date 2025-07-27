@@ -458,20 +458,22 @@ class Project extends HXProject
 			addAssetPath('assets/shaders', 'assets/shaders', 'default', ['*.frag'], []);
 		}
 
-		// Add ambience, music and sound assets for web (.mp3)
+		// Add ambience, music, phone call and sound assets for web (.mp3)
 		if (isWeb())
 		{
 			addAssetPath('assets/ambience', 'assets/ambience', 'default', ['*.mp3'], ['*.ogg']);
 			addAssetPath('assets/music', 'assets/music', 'default', ['*.mp3'], ['*.ogg']);
 			addAssetPath('assets/sounds', 'assets/sounds', 'default', ['*.mp3'], ['*.ogg']);
+			addAssetPath('assets/phone-calls', 'assets/phone-calls', 'default', ['*.mp3'], ['*.ogg']);
 		}
 
-		// Add ambience, music and sound assets for desktop (.ogg)
+		// Add ambience, music, phone call and sound assets for desktop (.ogg)
 		if (isDesktop())
 		{
 			addAssetPath('assets/ambience', 'assets/ambience', 'default', ['*.ogg'], ['*.mp3']);
 			addAssetPath('assets/music', 'assets/music', 'default', ['*.ogg'], ['*.mp3']);
 			addAssetPath('assets/sounds', 'assets/sounds', 'default', ['*.ogg'], ['*.mp3']);
+			addAssetPath('assets/phone-calls', 'assets/phone-calls', 'default', ['*.ogg'], ['*.mp3']);
 		}
 	}
 

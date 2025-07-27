@@ -1,22 +1,21 @@
 package fnas.ui;
 
+import fnas.ui.behavior.ClickableBehavior;
 import flixel.text.FlxText;
 
 /**
  * Object that can be created for making text clickable.
  */
-class ClickableText extends FlxText
+class UIClickableText extends FlxText
 {
 	/**
-	 * The behavior for this clickable sprite.
+	 * The behavior for this clickable text.
 	 */
 	public var behavior:ClickableBehavior;
 
 	/**
-	 * Constructor.
-	 * 
-	 * @param x The X position of `this` clickable sprite.
-	 * @param y The Y position of `this` clickable sprite.
+	 * @param x The X position of `this` clickable text.
+	 * @param y The Y position of `this` clickable text.
 	 */
 	public function new(x:Float = 0, y:Float = 0)
 	{
@@ -24,8 +23,8 @@ class ClickableText extends FlxText
 		behavior = new ClickableBehavior();
 	}
 
-	// =============================
-	//            METHODS
+	// 
+	// METHODS
 	// =============================
 
 	override function update(elapsed:Float):Void

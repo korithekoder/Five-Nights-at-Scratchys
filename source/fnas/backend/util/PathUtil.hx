@@ -76,6 +76,17 @@ final class PathUtil
 	}
 
 	/**
+	 * Get the path of a phone call sound asset.
+	 * 
+	 * @param name The name of the phone call (this does not include the file extension).
+	 * @return     The path of the phone call.
+	 */
+	public static inline function ofPhoneCall(name:String):String
+	{
+		return 'assets/phone-calls/$name${#if html5 '.mp3' #else '.ogg' #end}';
+	}
+
+	/**
 	 * Get the paths of a sprite sheets' image and `.xml` file.
 	 * Note that this will return an array of both pathways, with the
 	 * first element being to the image and the second one being its
@@ -85,11 +96,11 @@ final class PathUtil
 	 * be in the same location or otherwise this function will fail.
 	 * 
 	 * @param name The name of the sprite sheet.
-	 * @return     An array of the paths to the image and the `.xml` file.
+	 * @return An array of the paths to the image and the `.xml` file.
 	 */
 	public static inline function ofSpritesheet(name:String):Array<String>
 	{
-		return ['assets/images/spritesheets/$name.png', 'assets/images/spritesheets/$name.xml'];
+		return ['assets/images/$name.png', 'assets/images/$name.xml'];
 	}
 
 	/**

@@ -36,12 +36,12 @@ class WebWarningState extends FlxState
 		warningGroup.add(warningHeading);
 
 		warningText = new FlxText();
-		warningText.text = 'Even though it TECHNICALLY functions just fine, it is\n'
-			+ 'STRONGLY recommended that you play the desktop version, as it\n'
-			+ 'has sounds that echo, spooky filters and overall just a better\n'
-			+ 'horror experience!\n\n'
-			+ 'SPACE: Continue Playing on the Web\n'
-			+ 'ENTER: Redirect to Official Desktop Downloads on itch.io';
+		warningText.text = 'Even though it TECHNICALLY functions just fine, it is
+			STRONGLY recommended that you play the desktop version, as it
+			has sounds that echo, spooky filters and overall just a better
+			horror experience!\n
+			SPACE: Continue Playing on the Web
+			ENTER: Redirect to Official Desktop downloads on itch.io';
 		warningText.size = 25;
 		warningText.alignment = CENTER;
 		warningText.updateHitbox();

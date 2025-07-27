@@ -1,11 +1,12 @@
 package fnas.ui;
 
+import fnas.ui.behavior.ClickableBehavior;
 import flixel.FlxSprite;
 
 /**
  * Object that can be created for making a sprite clickable.
  */
-class ClickableSprite extends FlxSprite
+class UIClickableSprite extends FlxSprite
 {
 	/**
 	 * The behavior for this clickable sprite.
@@ -13,8 +14,6 @@ class ClickableSprite extends FlxSprite
 	public var behavior:ClickableBehavior;
 
 	/**
-	 * Constructor.
-	 * 
 	 * @param x The X position of `this` clickable sprite.
 	 * @param y The Y position of `this` clickable sprite.
 	 */
@@ -24,8 +23,8 @@ class ClickableSprite extends FlxSprite
 		behavior = new ClickableBehavior();
 	}
 
-	// =============================
-	//            METHODS
+	//
+	// METHODS
 	// =============================
 
 	override function update(elapsed:Float):Void

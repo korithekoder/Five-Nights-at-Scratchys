@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TextureAtlas imagePath="camera.png">
+    <SubTexture name="monitor_0" x="0" y="0" width="2564" height="176" frameX="0" frameY="0" frameWidth="2560" frameHeight="172" />
+    <SubTexture name="monitor_1" x="0" y="176" width="2564" height="794" frameX="0" frameY="0" frameWidth="2560" frameHeight="790" />
+    <SubTexture name="monitor_2" x="0" y="970" width="2564" height="1286" frameX="0" frameY="0" frameWidth="2560" frameHeight="1282" />
+    <SubTexture name="monitor_3" x="0" y="2256" width="2564" height="1444" frameX="0" frameY="0" frameWidth="2560" frameHeight="1440" />
+</TextureAtlas>

@@ -16,7 +16,7 @@ import sys.thread.Thread;
 final class DiscordClient
 {
 	private static var _presence:DiscordRichPresence = new DiscordRichPresence();
-	private static var _appId:String = ''; // ID for the Discord application
+	private static var _appId:String = '1398504843261378652'; // ID for the Discord application
 
 	private function new() {}
 
